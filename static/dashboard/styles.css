@@ -1,0 +1,51 @@
+.contain {
+        height: 100vh;
+        width: 100vw;
+}
+
+.sidebar-watchlist {
+        height:100%;
+        width:160px;
+        position: fixed;
+        z-index:1;
+        top:0;
+        left:0;
+        background-color:#111;
+        overflow-x:hidden;
+        padding-top:20px;
+}
+
+.table-watchlist {
+        color: #ddd;
+        border-collapse: separate;
+        border-spacing: 10px 20px;
+}
+
+.main-container {
+        height: 100%;
+        width: calc(100% - 160px);
+        margin-left: 160px;
+        background-color: #1f194c;
+}
+
+.input-group {
+        width: 100vw;
+        padding: 20px;
+}
+
+.input-group input {
+        width: 60vw;
+}
+
+.input-group button {
+        width: 15vw;
+        height: 50%;
+        margin: 0 10px;
+}
+
+#charts {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+}

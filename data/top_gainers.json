@@ -1,0 +1,100 @@
+[
+{
+"symbol": "IVA",
+"name": "Inventiva S.A.",
+"change": 2.89,
+"price": 7.05,
+"changesPercentage": 69.47116
+},
+{
+"symbol": "GBR",
+"name": "New Concept Energy, Inc.",
+"change": 0.36,
+"price": 1.56,
+"changesPercentage": 29.999989
+},
+{
+"symbol": "ABEO",
+"name": "Abeona Therapeutics Inc.",
+"change": 0.89,
+"price": 4.41,
+"changesPercentage": 25.284088
+},
+{
+"symbol": "AEHR",
+"name": "Aehr Test Systems",
+"change": 3.32,
+"price": 17.19,
+"changesPercentage": 23.93656
+},
+{
+"symbol": "BKD",
+"name": "Brookdale Senior Living Inc.",
+"change": 0.8,
+"price": 4.81,
+"changesPercentage": 19.950115
+},
+{
+"symbol": "AMBC",
+"name": "Ambac Financial Group, Inc.",
+"change": 2,
+"price": 14.8,
+"changesPercentage": 15.625
+},
+{
+"symbol": "FEMY",
+"name": "Femasys Inc.",
+"change": 0.17,
+"price": 1.33,
+"changesPercentage": 14.655179
+},
+{
+"symbol": "NMRD",
+"name": "Nemaura Medical Inc.",
+"change": 0.31,
+"price": 2.61,
+"changesPercentage": 13.478258
+},
+{
+"symbol": "CS",
+"name": "Credit Suisse Group AG",
+"change": 0.56,
+"price": 4.85,
+"changesPercentage": 13.053613
+},
+{
+"symbol": "JCE",
+"name": "Nuveen Core Equity Alpha Fund",
+"change": 1.76,
+"price": 15.72,
+"changesPercentage": 12.6074505
+},
+{
+"symbol": "AZ",
+"name": "A2Z Smart Technologies Corp.",
+"change": 0.19,
+"price": 1.76,
+"changesPercentage": 12.101907
+},
+{
+"symbol": "FSI",
+"name": "Flexible Solutions International, Inc.",
+"change": 0.34,
+"price": 3.17,
+"changesPercentage": 12.01414
+},
+{
+"symbol": "TOP",
+"name": "TOP Financial Group Limited",
+"change": 2.15,
+"price": 20.05,
+"changesPercentage": 12.011171
+},
+{
+"symbol": "IH",
+"name": "iHuman Inc.",
+"change": 0.2,
+"price": 1.93,
+"changesPercentage": 11.56069
+}
+]

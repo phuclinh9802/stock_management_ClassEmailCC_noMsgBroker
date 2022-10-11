@@ -3,7 +3,7 @@
   padding: 0;
   font-family: Arial, Helvetica;
 }
-header {
+.head {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -11,24 +11,37 @@ header {
   box-shadow: 0 1px 8px #ddd;
 }
 
+#title-logo {
+    text-decoration: none;
+    transition: all 0.3s ease 0s;
+    color: #111;
+
+}
+#title-logo:hover {
+    color: #b2dfdb;
+}
 #nav-title {
   margin-right: auto;
   font-size: 1.5em;
 }
 
-header ul li {
+nav ul {
+    margin-bottom: 0;
+}
+
+.head ul li {
   list-style: none;
   display: inline-block;
   padding: 0 20px;
 }
 
-header a {
+.head a {
   text-decoration: none;
   color: #555;
   transition: all 0.3s ease 0s;
 }
 
-header a:hover {
+.head a:hover {
   color: #b2dfdb;
 }
 
@@ -106,18 +119,24 @@ header a:hover {
 }
 
 .landing-features {
+    margin-top: 30px;
   height: 100vh;
   width: 100vw;
   display: grid;
   place-items: center;
 }
-.row {
+.row-one {
   display: flex;
   flex-wrap: wrap;
 }
-.column {
+
+.section-heading {
+    margin-bottom: 20px;
+}
+
+.column-one {
   width: 100%;
-  padding-bottom: 1em;
+  /*padding-bottom: 1em;*/
   text-align: center;
 }
 .card {
@@ -231,4 +250,25 @@ footer{
 
 .socials a:hover i{
     color: aqua;
+}
+
+.table-grid {
+    display: grid;
+    grid-gap: 50px;
+    grid-template-columns: auto auto;
+}
+.table {
+    background: #ddd;
+}
+
+table .gainer {
+    background: #33cc33;
+}
+
+table .loser {
+    background: #ff704d;
+}
+
+.top-gainers-top, .top-losers-top {
+    text-align: center;
 }
