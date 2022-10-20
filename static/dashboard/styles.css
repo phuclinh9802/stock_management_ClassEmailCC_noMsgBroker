@@ -5,7 +5,7 @@
 
 .sidebar-watchlist {
         height:100%;
-        width:160px;
+        width:200px;
         position: fixed;
         z-index:1;
         top:0;
@@ -13,6 +13,7 @@
         background-color:#111;
         overflow-x:hidden;
         padding-top:20px;
+        border-right: 1px solid #ddd;
 }
 
 .table-watchlist {
@@ -23,14 +24,14 @@
 
 .main-container {
         height: 100%;
-        width: calc(100% - 160px);
-        margin-left: 160px;
-        background-color: #1f194c;
+        width: calc(100% - 200);
+        padding-left: 200px;
+        background-color: #111;
 }
 
 .input-group {
-        width: 100vw;
-        padding: 20px;
+        /*width: 100%;*/
+        padding: 40px;
 }
 
 .input-group input {
@@ -48,4 +49,5 @@
         height: 100%;
         margin: 0;
         padding: 0;
+        border-top: 1px solid #ddd;
 }
