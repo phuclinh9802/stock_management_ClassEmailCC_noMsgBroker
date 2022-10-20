@@ -15,7 +15,7 @@ def market(request):
     data2 = json.load(gainers)
 
     # print(type(data2[0].change))
-    print(type(data2[0]['price']))
+    # print(type(data2[0]['price']))
 
     context = {
         'data': data,
