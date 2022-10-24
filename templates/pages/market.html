@@ -70,6 +70,36 @@
       </tbody>
     </table>
     </div>
+
+
+    <div class="table">
+    <h3 class="top-losers-top">Top Active</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Symbol</th>
+          <th scope="col">Price Change</th>
+          <th scope="col">Price</th>
+          <th scope="col">%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticker in data3 %}
+        <tr>
+          <th scope="row">{{ ticker.symbol }}</th>
+            {% if ticker.change > 0.0 %}
+            <td class="gainer">{{ ticker.change }}</td>
+            {% elif ticker.change < 0.0 %}
+            <td class="loser">{{ ticker.change }}</td>
+            {% endif %}
+          <td>{{ ticker.price }}</td>
+          <td>{{ ticker.changesPercentage }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    </div>
     </div>
 
 </section>
