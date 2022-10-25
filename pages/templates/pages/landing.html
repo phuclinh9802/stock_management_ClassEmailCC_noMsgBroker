@@ -1,7 +1,7 @@
 {% extends 'pages/index.html' %}
-
+{% load static %}
 {% block content %}
-    <section class="landing-section landing-main">
+    <section class="landing-section landing-main" style="background-image: url('{% static "images/stock.jpg" %}')">
         <h1 class="brand">Stock Market Indicator</h1>
         <h2>
         Your own financial advisor -- more than just stock broking

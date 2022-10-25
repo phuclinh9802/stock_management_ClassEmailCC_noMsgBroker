@@ -1,7 +1,7 @@
 {% extends "pages/index.html" %}
-
+{% load static %}
 {% block content %}
-<section class="landing-section landing-main">
+<section class="landing-section landing-main" style="background-image: url('{% static "images/stock.jpg" %}')">
     <h1 class="brand">Top Market Movers</h1>
     <div class="table-grid">
     <div class="table">
