@@ -74,3 +74,6 @@ def market(request):
 
 def dashboard(request):
     return render(request, 'dashboard/charts.html')
+
+def register(request):
+    return render(request, 'registration/register.html')
