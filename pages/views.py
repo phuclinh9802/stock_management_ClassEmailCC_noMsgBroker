@@ -47,13 +47,13 @@ def market(request):
     response_stock_live_losers = requests.get(STOCK_ENDPOINT_LOSERS)
     response_stock_live_losers.raise_for_status()
 
-    losers = open('data/top_losers.json')
+    # losers = open('data/top_losers.json')
     # data = json.load(losers)
     data = response_stock_live_losers.json()
 
     response_stock_live_gainers = requests.get(STOCK_ENDPOINT_GAINERS)
     response_stock_live_gainers.raise_for_status()
-    gainers = open('data/top_gainers.json')
+    # gainers = open('data/top_gainers.json')
     # data2 = json.load(gainers)
     data2 = response_stock_live_gainers.json()
 
