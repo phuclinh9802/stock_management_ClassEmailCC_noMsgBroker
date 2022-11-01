@@ -17,7 +17,7 @@ class Role(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.role_id
+        return self.role_name
 
 
 class Profile(models.Model):
@@ -45,7 +45,7 @@ class Profile(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.profile_id
+        return str(self.user_id)
 
 
 class Users(models.Model):
@@ -65,13 +65,13 @@ class Users(models.Model):
         max_length=254,
         help_text='Enter user Email Address')
 
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
+    # stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
 
     role_id = models.ForeignKey('Role', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.user_id
+        return self.user_first_name + " " + self.user_last_name
 
 
 class Watch_List(models.Model):
@@ -135,11 +135,11 @@ class Stock(models.Model):
 
     user_id = models.ForeignKey('Users', on_delete=models.SET_NULL, null=True)
 
-    watchlist_id = models.ForeignKey('Watch_List', on_delete=models.SET_NULL, null=True)
+    # watchlist_id = models.ForeignKey('Watch_List', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.stock_id
+        return self.stock_ticker
 
 
 class Preference(models.Model):
@@ -187,7 +187,7 @@ class New(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.news_id
+        return self.news_title
 
 
 class Threshold(models.Model):
