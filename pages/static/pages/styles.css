@@ -72,6 +72,8 @@ nav ul {
   /*z-index: -1;*/
 }
 
+
+
 /* CSS */
 .button-17 {
   margin: 20px 0;
@@ -262,8 +264,13 @@ footer{
     grid-gap: 50px;
     grid-template-columns: auto auto auto;
 }
-.table {
+.tab {
     background: #ddd;
+    width: 100%;
+    height: 60vh;
+    z-index: 1;
+    padding: 20px;
+    overflow: auto;
 }
 
 table .gainer {
@@ -276,4 +283,10 @@ table .loser {
 
 .top-gainers-top, .top-losers-top {
     text-align: center;
+    border-bottom: 1px solid #111;
+}
+
+table tbody td, table thead tr th, table tbody th {
+    padding: 5px;
+    border: 1px solid #aaa;
 }

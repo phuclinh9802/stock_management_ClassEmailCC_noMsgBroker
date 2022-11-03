@@ -1,12 +1,12 @@
 {% extends "pages/index.html" %}
 {% load static %}
 {% block content %}
-<section class="landing-section landing-main" style="background-image: url('{% static "images/stock.jpg" %}')">
+<section class="landing-section landing-main" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/stock.jpg" %}')">
     <h1 class="brand">Top Market Movers</h1>
     <div class="table-grid">
-    <div class="table">
+    <div class="tab">
     <h3 class="top-gainers-top">Top Gainers</h3>
-    <table class="table">
+    <table class="tb">
       <thead>
         <tr>
           <th scope="col">Symbol</th>
@@ -15,7 +15,7 @@
           <th scope="col">%</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody >
       {% for ticker in data2 %}
         <tr>
           <th scope="row">{{ ticker.symbol }}</th>
@@ -43,9 +43,9 @@
       </tbody>
     </table>
     </div>
-<div class="table">
+<div class="tab">
     <h3 class="top-losers-top">Top Losers</h3>
-    <table class="table">
+    <table class="tb">
       <thead>
         <tr>
           <th scope="col">Symbol</th>
@@ -72,9 +72,9 @@
     </div>
 
 
-    <div class="table">
+    <div class="tab">
     <h3 class="top-losers-top">Top Active</h3>
-    <table class="table">
+    <table class="tb">
       <thead>
         <tr>
           <th scope="col">Symbol</th>
