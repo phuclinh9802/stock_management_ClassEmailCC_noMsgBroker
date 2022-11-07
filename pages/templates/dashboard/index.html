@@ -10,72 +10,7 @@
 
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js"></script>
-<script>
 
-    function displayChart(ticker) {
-        anychart.onDocumentReady(function () {
-          anychart.data.loadCsvFile(
-            `https://raw.githubusercontent.com/phuclinh9802/stock_data/main/${ticker}.csv`,
-            function (data) {
-              // create data table on loaded data
-              var dataTable = anychart.data.table();
-              dataTable.addData(data);
-
-              // map loaded data for the ohlc series
-              var mapping = dataTable.mapAs({
-                open: 1,
-                high: 2,
-                low: 3,
-                close: 4
-              });
-
-              // create stock chart
-                var chart = anychart.stock();
-
-                // create first plot on the chart
-                var plot = chart.plot(0);
-
-                // set grid settings
-                plot.yGrid(true).xGrid(true).yMinorGrid(true).xMinorGrid(true);
-                var series = plot.candlestick(mapping)
-                        .name('Tesla');
-
-                series.legendItem().iconType('rising-falling');
-
-                // create scroller series with mapped data
-                chart.scroller().candlestick(mapping);
-
-                // set chart selected date/time range
-                chart.selectRange('2020-11-27', '2021-11-26');
-
-                chart.background().fill("#111");
-
-
-                // create range picker
-                var rangePicker = anychart.ui.rangePicker();
-
-                // init range picker
-                rangePicker.render(chart);
-
-                // create range selector
-                var rangeSelector = anychart.ui.rangeSelector();
-
-                // init range selector
-                rangeSelector.render(chart);
-                // sets the title of the chart
-                chart.title(`${ticker} Stock Chart`);
-
-                // set container id for the chart
-                chart.container('charts');
-
-                // initiate chart drawing
-                chart.draw();
-            }
-          );
-    });
-    }
-
-</script>
     <link href="https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
     <link href="https://cdn.anychart.com/releases/8.11.0/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
     <link
@@ -131,97 +66,98 @@
 
         </div>
 
-            <form class="input-group">
+{#            <form class="input-group" method="get">#}
               <div class="form-outline">
-{#                <input list="data" placeholder="AAPL..." class="form-control" />#}
-                  <select class="form-ct" id="data">
-                      <option disabled="true">-- Select Stock Ticker --</option>
-                      {% for stock in stocks %}
-                      <option value="{{ stock.stock_ticker }}">{{ stock.stock_ticker }}</option>
-                      {% endfor %}
-                  </select>
+                <input id="q" name="q" list="data" placeholder="AAPL..." class="form-control" />
+{#                  <select name="stock-data" class="form-ct" id="data">#}
+{#                      <option disabled="true">-- Select Stock Ticker --</option>#}
+{#                      {% for stock in stocks %}#}
+{#                      <option value="{{ stock.stock_ticker }}">{{ stock.stock_ticker }}</option>#}
+{#                      {% endfor %}#}
+{#                  </select>#}
               </div>
-              <button class="btn btn-primary">
+              <button class="btn btn-primary" id="link" onclick="displayChart(document.getElementById('q').value)">
                 <i class="fas fa-search"></i>
               </button>
-            </form>
-            {% block content %}{% endblock %}
-
+            <button class="btn btn-danger" id="link" onclick="removePlot()">
+                Clear
+              </button>
+                <div id="charts">
+                </div>
         </div>
     </div>
 </body>
 </html>
+
 <script>
-    var stock = document.querySelector("#data");
-    function test() {
-        var stockSelected = stock.options[stock.selectedIndex].value;
-        console.log(stockSelected);
-
-        return stockSelected;
+    function removePlot() {
+        chart.dispose();
     }
+    function displayChart(ticker) {
+        {#let ticker = document.getElementById('q').value;#}
+        {#print(ticker)#}
+        anychart.onDocumentReady(function () {
+            anychart.data.loadCsvFile(
+                `https://raw.githubusercontent.com/phuclinh9802/stock_data/main/${ticker}.csv`,
+                function (data) {
+                    // create data table on loaded data
+                    var dataTable = anychart.data.table();
+                    console.log(dataTable)
+                    dataTable.addData(data);
 
-    stock.onchange = test;
+                    // map loaded data for the ohlc series
+                    var mapping = dataTable.mapAs({
+                        open: 1,
+                        high: 2,
+                        low: 3,
+                        close: 4
+                    });
 
-    s = test()
+                    // create stock chart
+                    chart = anychart.stock();
 
-    anychart.onDocumentLoad(function () {
-          anychart.data.loadCsvFile(
-            `https://raw.githubusercontent.com/phuclinh9802/stock_data/main/${s}.csv`,
-            function (data) {
-              // create data table on loaded data
-              var dataTable = anychart.data.table();
-              dataTable.addData(data);
+                    // create first plot on the chart
+                    var plot = chart.plot(0);
 
-              // map loaded data for the ohlc series
-              var mapping = dataTable.mapAs({
-                open: 1,
-                high: 2,
-                low: 3,
-                close: 4
-              });
+                    // set grid settings
+                    plot.yGrid(true).xGrid(true).yMinorGrid(true).xMinorGrid(true);
+                    var series = plot.candlestick(mapping)
+                        .name(ticker);
 
-              // create stock chart
-                var chart = anychart.stock();
+                    series.legendItem().iconType('rising-falling');
 
-                // create first plot on the chart
-                var plot = chart.plot(0);
+                    // create scroller series with mapped data
+                    chart.scroller().candlestick(mapping);
 
-                // set grid settings
-                plot.yGrid(true).xGrid(true).yMinorGrid(true).xMinorGrid(true);
-                var series = plot.candlestick(mapping)
-                        .name(s);
+                    // set chart selected date/time range
+                    chart.selectRange('2020-11-27', '2021-11-26');
 
-                series.legendItem().iconType('rising-falling');
-
-                // create scroller series with mapped data
-                chart.scroller().candlestick(mapping);
-
-                // set chart selected date/time range
-                chart.selectRange('2020-11-27', '2021-11-26');
-
-                chart.background().fill("#111");
+                    chart.background().fill("#111");
 
 
-                // create range picker
-                var rangePicker = anychart.ui.rangePicker();
+                    // create range picker
+                    var rangePicker = anychart.ui.rangePicker();
 
-                // init range picker
-                rangePicker.render(chart);
+                    // init range picker
+                    rangePicker.render(chart);
 
-                // create range selector
-                var rangeSelector = anychart.ui.rangeSelector();
+                    // create range selector
+                    var rangeSelector = anychart.ui.rangeSelector();
 
-                // init range selector
-                rangeSelector.render(chart);
-                // sets the title of the chart
-                chart.title(`${s} Stock Chart`);
+                    // init range selector
+                    rangeSelector.render(chart);
+                    // sets the title of the chart
+                    chart.title(`${ticker} Stock Chart`);
 
-                // set container id for the chart
-                chart.container('charts');
 
-                // initiate chart drawing
-                chart.draw();
-            }
-          );
-    });
+
+                    // set container id for the chart
+                    chart.container('charts');
+
+                    // initiate chart drawing
+                    chart.draw();
+                }
+            );
+        });
+    }
 </script>
