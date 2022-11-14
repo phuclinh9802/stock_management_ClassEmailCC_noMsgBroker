@@ -1,6 +1,9 @@
 import json
 import requests
 import os
+
+from django.core.mail import send_mail
+
 from .forms import NewUserForm
 from django.contrib import messages
 from django.contrib.auth import login
@@ -13,7 +16,6 @@ from pages.models import Stock, WatchList, StockNew, Profile
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 
-
 # REAL_TIME_DATA_API_KEY = os.environ.get('API_K_RTD')
 # NEWS_API_KEY = os.environ.get('API_K_N')
 # STOCK_DATA_HISTORY_API_KEY = os.environ.get('API_K_SDH')
@@ -22,7 +24,7 @@ STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 REAL_TIME_DATA = "https://financialmodelingprep.com/api/v3/quote-short/TSLA?apikey=2d4d605c25190468fc00fe2aca6a2276"
 STOCK_ENDPOINT_GAINERS = f"https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=2d4d605c25190468fc00fe2aca6a2276"
-STOCK_ENDPOINT_LOSERS  = f"https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=2d4d605c25190468fc00fe2aca6a2276"
+STOCK_ENDPOINT_LOSERS = f"https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=2d4d605c25190468fc00fe2aca6a2276"
 STOCK_ENDPOINT_ACTIVE = f"https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=2d4d605c25190468fc00fe2aca6a2276"
 
 
@@ -32,8 +34,10 @@ STOCK_ENDPOINT_ACTIVE = f"https://financialmodelingprep.com/api/v3/stock_market/
 def index(request):
     return render(request, 'pages/index.html')
 
+
 def landing(request):
     return render(request, 'pages/landing.html')
+
 
 def market(request):
     # stock_parm = {
@@ -79,12 +83,13 @@ def market(request):
     }
     return render(request, 'pages/market.html', context=context)
 
+
 @login_required
 def dashboard(request):
     tickers = Stock.objects.all()
 
+    return render(request, 'dashboard/charts.html', {"stocks": tickers})
 
-    return render(request, 'dashboard/charts.html', {"stocks":tickers})
 
 def register(request):
     if request.method == "POST":
@@ -118,7 +123,7 @@ def watchlist(request):
             'symbol': elem.stock_id,
             'interval': '5min',
             'apikey': '2APHUBAY3C5SAEY9'
-            }
+        }
         response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
         print(response_stock.raise_for_status())
         print(response_stock.json())
@@ -130,3 +135,15 @@ def watchlist(request):
 def news(request):
     resp1 = "Future news feed"
     return render(request, 'dashboard/news.html', {"resp1": resp1})
+
+
+def sendmail(request):
+    send_mail(
+        'test subject',
+        'test message',
+        'akthrowawaymail@gmail.com',
+        ['akthrowawaymail@gmail.com'],
+        fail_silently=False
+    )
+    print("hitting")
+    return render(request, 'pages/mailsent.html')
