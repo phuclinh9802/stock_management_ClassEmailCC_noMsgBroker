@@ -30,11 +30,11 @@ class Stock(models.Model):
     """Model representing a Stock."""
 
     stock_name = models.CharField(
-        max_length=20,
+        max_length=200,
         help_text='Enter the stock name', null=True)
 
     stock_ticker = models.CharField(
-        max_length=4,
+        max_length=10,
         help_text='Enter the stock ticker', primary_key=True)
 
     def __str__(self):
@@ -52,19 +52,10 @@ class WatchList(models.Model):
 class StockNew(models.Model):
     """Model representing News."""
 
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     stock_id = models.ForeignKey(Stock, on_delete=models.CASCADE, null=True)
 
-    news_title = models.CharField(
-        max_length=500,
-        help_text='Enter the stock news title', null=True)
 
-    news_content = models.TextField(
-        max_length=5000,
-        help_text='Enter the stock news content', null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.news_title
 
 
 class Threshold(models.Model):
