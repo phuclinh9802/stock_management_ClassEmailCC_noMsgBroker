@@ -1,189 +1,66 @@
-import uuid
-
 from django.db import models
-from django.forms import DateField
-from django.urls import reverse
-
-
-# Create your models here.
-class Role(models.Model):
-    """Model representing a book genre."""
-    role_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                               help_text="Unique ID for role")
-
-    role_name = models.CharField(
-        max_length=200,
-        help_text='Enter role name')
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.role_name
-
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
-    """Model representing a Profile."""
-    profile_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                  help_text="Unique ID for profile")
-
-    profile_street = models.TextField(
+    user_id = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE, primary_key=True)
+    profile_pic = models.ImageField(upload_to='profile_images', null=True)
+    user_street = models.TextField(
         max_length=50,
-        help_text='Enter profile street name')
+        help_text='Enter street name', null=True)
 
-    profile_city = models.CharField(
+    user_city = models.CharField(
         max_length=20,
-        help_text='Enter profile city name')
+        help_text='Enter city name', null=True)
 
-    profile_state = models.CharField(
+    user_state = models.CharField(
         max_length=20,
-        help_text='Enter profile state name')
+        help_text='Enter state name', null=True)
 
-    profile_zipcode = models.CharField(
+    user_zipcode = models.CharField(
         max_length=10,
-        help_text='Enter profile zipcode name')
-
-    user_id = models.ForeignKey('Users', on_delete=models.SET_NULL, null=True)
-
+        help_text='Enter zipcode name', null=True)
     def __str__(self):
-        """String for representing the Model object."""
         return str(self.user_id)
 
 
-class Users(models.Model):
-    """Model representing Users."""
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                               help_text="Unique ID for User")
 
-    user_first_name = models.CharField(
-        max_length=50,
-        help_text='Enter user first name')
-
-    user_last_name = models.CharField(
-        max_length=20,
-        help_text='Enter user last name')
-
-    user_email = models.EmailField(
-        max_length=254,
-        help_text='Enter user Email Address')
-
-    # stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
-
-    role_id = models.ForeignKey('Role', on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.user_first_name + " " + self.user_last_name
-
-
-class Watch_List(models.Model):
-    """Model representing a Watch List."""
-    watchlist_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                    help_text="Unique ID for watchlist")
-
-    user_watchlist_name = models.CharField(
-        max_length=50,
-        help_text='Enter the watchlist name')
-
-    user_watchlist_date_created = DateField(help_text='Enter the watchlist created date')
-
-    user_id = models.ForeignKey('Users', on_delete=models.SET_NULL, null=True)
-
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.watchlist_id
-
+# Create your models here.
 
 class Stock(models.Model):
     """Model representing a Stock."""
-    stock_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                help_text="Unique ID for stock")
 
     stock_name = models.CharField(
         max_length=20,
-        help_text='Enter the stock name')
+        help_text='Enter the stock name', null=True)
 
     stock_ticker = models.CharField(
-        max_length=20,
-        help_text='Enter the stock ticker')
-
-    stock_quantity = models.CharField(
-        max_length=20,
-        help_text='Enter the stock quantity')
-
-    stock_active_quantity = models.CharField(
-        max_length=20,
-        help_text='Enter the stock active quantity')
-
-    stock_day_percentage = models.CharField(
-        max_length=20,
-        help_text='Enter the stock day percentage')
-
-    stock_highest_price = models.CharField(
-        max_length=20,
-        help_text='Enter the stock highest price')
-
-    stock_lowest_price = models.CharField(
-        max_length=20,
-        help_text='Enter the stock lowest price')
-
-    stock_open_price = models.CharField(
-        max_length=20,
-        help_text='Enter the stock open price')
-
-    stock_date = models.DateField(help_text='Enter the stock date')
-
-    user_id = models.ForeignKey('Users', on_delete=models.SET_NULL, null=True)
-
-    # watchlist_id = models.ForeignKey('Watch_List', on_delete=models.SET_NULL, null=True)
+        max_length=4,
+        help_text='Enter the stock ticker', primary_key=True)
 
     def __str__(self):
         """String for representing the Model object."""
         return self.stock_ticker
 
+class WatchList(models.Model):
+    """Model representing a Watch List."""
 
-class Preference(models.Model):
-    """Model representing a stock Preference."""
-    preference_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                     help_text="Unique ID for preference")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
-    user_id = models.ForeignKey('Users', on_delete=models.SET_NULL, null=True)
-
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.preference_id
+    stock_id = models.ForeignKey(Stock, on_delete=models.CASCADE, null=True)
 
 
-class Stocks_list(models.Model):
-    """Model representing a stocks list."""
-    stocks_list_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                      help_text="Unique ID for Stock List")
-
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.stocks_list_id
-
-
-class New(models.Model):
+class StockNew(models.Model):
     """Model representing News."""
-    news_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                               help_text="Unique ID for the news")
+
+    stock_id = models.ForeignKey(Stock, on_delete=models.CASCADE, null=True)
 
     news_title = models.CharField(
-        max_length=50,
-        help_text='Enter the stock news title')
+        max_length=500,
+        help_text='Enter the stock news title', null=True)
 
     news_content = models.TextField(
         max_length=5000,
-        help_text='Enter the stock news content')
-
-    news_date = models.DateField(help_text='Enter the News date')
-
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
+        help_text='Enter the stock news content', null=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -192,26 +69,12 @@ class New(models.Model):
 
 class Threshold(models.Model):
     """Model representing Thresholds."""
-    threshold_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                    help_text="Unique ID for threshold")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    stock_id = models.ForeignKey(Stock, on_delete=models.CASCADE, null=True)
 
-    threshold_status =(
-        ('d', 'Maintenance'),
-        ('o', 'On loan'),
-        ('a', 'Available'),
-        ('r', 'Reserved'),
+
+    threshold_percentage_change = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text='Enter the stock threshold percentage change content', null=True
     )
-
-    threshold_percentage_change = models.CharField(
-        max_length=500,
-        help_text='Enter the stock threshold percentage change content')
-
-    threshold_price_change = models.CharField(
-        max_length=500,
-        help_text='Enter the stock threshold price change content')
-
-    stock_id = models.ForeignKey('Stock', on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.threshold_id

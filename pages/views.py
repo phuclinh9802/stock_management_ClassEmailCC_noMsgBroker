@@ -1,4 +1,3 @@
-from django.shortcuts import render, redirect
 import json
 import requests
 import os
@@ -6,8 +5,10 @@ from .forms import NewUserForm
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
 
-from pages.models import Stock
+from pages.models import Stock, WatchList, StockNew, Profile
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
@@ -78,8 +79,10 @@ def market(request):
     }
     return render(request, 'pages/market.html', context=context)
 
+@login_required
 def dashboard(request):
     tickers = Stock.objects.all()
+
 
     return render(request, 'dashboard/charts.html', {"stocks":tickers})
 
@@ -103,3 +106,22 @@ def register(request):
         form = NewUserForm()
 
     return render(request, 'registration/register.html', context={"register_form": form})
+
+
+def watchlist(request):
+    watch_list = WatchList.objects.all()
+    print(watch_list.values_list())
+    for elem in watch_list:
+        print(elem.stock_id)
+        stock_parm = {
+            'function': 'TIME_SERIES_INTRADAY',
+            'symbol': elem.stock_id,
+            'interval': '5min',
+            'apikey': '2APHUBAY3C5SAEY9'
+            }
+        response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+        print(response_stock.raise_for_status())
+        print(response_stock.json())
+        resp = response_stock.json()
+
+    return render(request, 'dashboard/watchlist.html', {"watch_list": watch_list, "resp": resp})

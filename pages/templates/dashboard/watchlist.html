@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'dashboard/index.html' %}
+
+{% block content %}
+
+        <div id="charts">
+        <table>
+            <thead>
+            {% for elem in watch_list %}
+            <tr>
+                {% if elem.user_id_id == user.id %}
+                <td>{{ elem.stock_id }}</td>
+                    <td>{{ resp }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </thead>
+        </table>
+
+
+        </div>
+
+{% endblock %}
+</html>
