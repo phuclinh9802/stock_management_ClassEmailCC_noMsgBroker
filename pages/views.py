@@ -125,3 +125,8 @@ def watchlist(request):
         resp = response_stock.json()
 
     return render(request, 'dashboard/watchlist.html', {"watch_list": watch_list, "resp": resp})
+
+
+def news(request):
+    resp1 = "Future news feed"
+    return render(request, 'dashboard/news.html', {"resp1": resp1})
