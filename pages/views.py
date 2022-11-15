@@ -10,6 +10,8 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from datetime import datetime as dt
+from datetime import timedelta
 
 from pages.models import Stock, WatchList, StockNew, Profile
 
@@ -116,25 +118,63 @@ def register(request):
 def watchlist(request):
     watch_list = WatchList.objects.all()
     print(watch_list.values_list())
+    resp = {}
+    response_stock = 'Default value'
     for elem in watch_list:
         print(elem.stock_id)
         stock_parm = {
             'function': 'TIME_SERIES_INTRADAY',
             'symbol': elem.stock_id,
-            'interval': '5min',
+            'interval': '60min',
             'apikey': '2APHUBAY3C5SAEY9'
         }
-        response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
-        print(response_stock.raise_for_status())
+        try:
+            response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+            response_stock.raise_for_status()
+            yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+            resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+        except:
+            resp[
+                'error'] = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
         print(response_stock.json())
-        resp = response_stock.json()
+
+        # print(response_stock.json()['Time Series (60min)'][yt_date]['4. close'])
 
     return render(request, 'dashboard/watchlist.html', {"watch_list": watch_list, "resp": resp})
 
 
 def news(request):
-    resp1 = "Future news feed"
-    return render(request, 'dashboard/news.html', {"resp1": resp1})
+    news_list = StockNew.objects.all()
+    resp1 = {}
+    response_news = "API call limit exhausted"
+    for elem in news_list:
+        company_name = Stock.objects.filter(stock_ticker__contains=elem.stock_id_id).values_list()[0][0]
+
+        new_parm = {
+            'q': company_name,
+            'apikey': '38e071deaa854b62b36b3faf67fc038f'
+        }
+        try:
+            response_news = requests.get("https://newsapi.org/v2/everything", params=new_parm)
+            response_news.raise_for_status()
+            response_news.json()
+            news_title = [response_news.json()['articles'][i]['title'] for i in range(3)]
+            news_description = [response_news.json()['articles'][i]['url'] for i in range(3)]
+            message_out = []
+            for x, y in zip(news_title, news_description):
+                message_out.append(f"Headline: {x}  Link to news: {y} ")
+            print(f"message_out : {message_out}")
+            resp1[elem.stock_id_id] = message_out
+
+
+        except:
+
+            resp1['error'] = response_news
+
+        print(f"resp1: {resp1}")
+
+    return render(request, 'dashboard/news.html', {"news_list": news_list, "resp1": resp1})
 
 
 def sendmail(request):
