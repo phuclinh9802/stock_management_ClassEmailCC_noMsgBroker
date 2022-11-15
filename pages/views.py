@@ -180,7 +180,7 @@ def news(request):
 def sendmail(request):
     send_mail(
         'Current News of your stock',
-        'test message',
+        'Test Message Example',
         'akthrowawaymail@gmail.com',
         [request.user.email],
         fail_silently=False
