@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+from django.forms import ModelForm
+from .models import Profile
 
 # Create your forms here.
 
@@ -24,3 +25,14 @@ class NewUserForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
+
+
+class EditProfileForm(ModelForm):
+	class Meta:
+		model = User
+		fields = ("email", "first_name", "last_name")
+
+class ProfileForm(ModelForm):
+	class Meta:
+		model = Profile
+		fields = ("user_street", "user_city", "user_state", "user_zipcode")

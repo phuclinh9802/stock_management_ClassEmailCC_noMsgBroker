@@ -114,7 +114,7 @@
             <div class="welcome">
 
             {% if user.is_authenticated %}
-                <p>Hi {{ user.username }}!</p>
+                <p>Hi <a href="{% url 'userupdate' pk=user.pk %}">{{ user.username }}!</a></p>
                 <p>
                     <a href="{% url 'logout' %}">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>

@@ -8,7 +8,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('watchlist/', views.watchlist, name='watchlist'),
     path('news/', views.news, name='news'),
-
+    path('userupdate/<int:pk>', views.userupdate, name='userupdate'),
     path('accounts/register/', views.register, name='register'),
     path('sendmail/', views.sendmail, name='sendmail'),
 ]

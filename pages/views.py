@@ -4,7 +4,7 @@ import os
 
 from django.core.mail import send_mail
 
-from .forms import NewUserForm
+from .forms import NewUserForm, EditProfileForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import Q
@@ -187,3 +187,20 @@ def sendmail(request):
     )
     print("hitting")
     return render(request, 'pages/mailsent.html')
+
+# def userupdate(request):
+#     return render(request, 'dashboard/userupdate.html')
+@login_required
+
+def userupdate(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            profile = form.save()
+            profile.save()
+            return render(request, 'dashboard/index.html')
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'dashboard/userupdate.html', {'form': form})
+
