@@ -7,16 +7,16 @@ STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 
 
-REAL_TIME_DATA_API_KEY = os.environ.get('API_K_RTD')
-NEWS_API_KEY = os.environ.get('API_K_N')
-STOCK_DATA_HISTORY_API_KEY = os.environ.get('API_K_SDH')
+#REAL_TIME_DATA_API_KEY = os.environ.get('API_K_RTD')
+#NEWS_API_KEY = os.environ.get('API_K_N')
+#STOCK_DATA_HISTORY_API_KEY = os.environ.get('API_K_SDH')
 
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 REAL_TIME_DATA = "https://financialmodelingprep.com/api/v3/quote-short/TSLA?apikey=2d4d605c25190468fc00fe2aca6a2276"
-STOCK_ENDPOINT_GAINERS = f"https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey={REAL_TIME_DATA_API_KEY}"
-STOCK_ENDPOINT_LOSERS  = f"https://financialmodelingprep.com/api/v3/stock_market/losers?apikey={REAL_TIME_DATA_API_KEY}"
-STOCK_ENDPOINT_ACTIVE = f"https://financialmodelingprep.com/api/v3/stock_market/actives?apikey={REAL_TIME_DATA_API_KEY}"
+STOCK_ENDPOINT_GAINERS = f"https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=2d4d605c25190468fc00fe2aca6a2276"
+STOCK_ENDPOINT_LOSERS  = f"https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=2d4d605c25190468fc00fe2aca6a2276"
+STOCK_ENDPOINT_ACTIVE = f"https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=2d4d605c25190468fc00fe2aca6a2276"
 
 
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
@@ -29,19 +29,19 @@ def landing(request):
     return render(request, 'pages/landing.html')
 
 def market(request):
-    stock_parm = {
-        'function': 'TIME_SERIES_DAILY',
-        'symbol': STOCK_NAME,
-        'interval': '5min',
-        'apikey': STOCK_DATA_HISTORY_API_KEY
+#    stock_parm = {
+ #       'function': 'TIME_SERIES_DAILY',
+  #      'symbol': STOCK_NAME,
+   #     'interval': '5min',
+#    'apikey': STOCK_DATA_HISTORY_API_KEY
         # 'apikey':'qhAGfTSCPZBvwtX5zd79_aHssRYEafLU'
-    }
+#    }
 
-    new_parm = {
+#    new_parm = {
 
-        'q': COMPANY_NAME,
-        'apikey': NEWS_API_KEY
-    }
+#        'q': COMPANY_NAME,
+#        'apikey': NEWS_API_KEY
+#    }
 
     # response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
     response_stock_live_losers = requests.get(STOCK_ENDPOINT_LOSERS)
