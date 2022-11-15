@@ -179,10 +179,10 @@ def news(request):
 
 def sendmail(request):
     send_mail(
-        'test subject',
+        'Current News of your stock',
         'test message',
         'akthrowawaymail@gmail.com',
-        ['akthrowawaymail@gmail.com'],
+        [request.user.email],
         fail_silently=False
     )
     print("hitting")
