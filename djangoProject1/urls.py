@@ -24,12 +24,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
     path('', RedirectView.as_view(url='dashboard/')),
-
 ]
 
 
 urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
+
 
 

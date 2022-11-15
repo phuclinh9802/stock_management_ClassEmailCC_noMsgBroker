@@ -9,6 +9,10 @@
 </head>
 <body>
 <style>
+.textinput, .emailinput {
+    width: 100%;
+}
+
 
 
 body{
@@ -49,53 +53,54 @@ a:hover{
 <div class="pt-5">
   <h1 class="text-center">SIGN UP </h1>
 <div class="container">
-                <div class="row">
-                    <div class="col-md-5 mx-auto">
-                        <div class="card card-body">
-
-                            <form id="submitForm" action={% url 'login' %} method="post" data-parsley-validate="" data-parsley-errors-messages-disabled="true" novalidate="" _lpchecked="1"><input type="hidden" name="_csrf" value="7635eb83-1f95-4b32-8788-abec2724a9a4">
-
-                                <div class="form-group required">
-                                    <lSabel for="username">First Name</lSabel>
-                                    <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">
-                                </div>
-                                <div class="form-group required">
-                                    <lSabel for="username">Last Name</lSabel>
-                                    <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">
-                                </div>
-                                <div class="form-group required">
-                                    <lSabel for="username">Email</lSabel>
-                                    <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">
-                                </div>
-                                <div class="form-group required">
-                                    <lSabel for="username">Confirm Email</lSabel>
-                                    <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">
-                                </div>
-                                <div class="form-group required">
-                                    <label class="d-flex flex-row align-items-center" for="password">Password</label>
-
-                                    <input type="password" class="form-control" required="" id="password" name="password" value="">
-                                </div>
-                                <div class="form-group mt-4 mb-4">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me" data-parsley-multiple="remember-me">
-                                        <label class="custom-control-label" for="remember-me">Remember me?</label>
-                                    </div>
-                                </div>
-                                <div class="form-group pt-1">
-                                    <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
-                                </div>
-                                <div class="form-group mt-4 mb-4">
-                                    <div class="custom-control custom-checkbox">
-                                        <a href="{% url "login" %}">Already have an account? Click here</a>
-                                    </div>
-                                </div>
-                            </form>
-
+        <div class="row">
+            <div class="col-md-5 mx-auto">
+                <div class="card card-body">
+                    {% load crispy_forms_tags %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ register_form | crispy }}
+{#                        <div class="form-group required">#}
+{#                            <lSabel for="username">First Name</lSabel>#}
+{#                            <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">#}
+{#                        </div>#}
+{#                        <div class="form-group required">#}
+{#                            <lSabel for="username">Last Name</lSabel>#}
+{#                            <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">#}
+{#                        </div>#}
+{#                        <div class="form-group required">#}
+{#                            <lSabel for="username">Email</lSabel>#}
+{#                            <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">#}
+{#                        </div>#}
+{#                        <div class="form-group required">#}
+{#                            <lSabel for="username">Confirm Email</lSabel>#}
+{#                            <label for="username"></label><input type="text" class="form-control text-lowercase" id="username" required="" name="username" value="">#}
+{#                        </div>#}
+{#                        <div class="form-group required">#}
+{#                            <label class="d-flex flex-row align-items-center" for="password">Password</label>#}
+{##}
+{#                            <input type="password" class="form-control" required="" id="password" name="password" value="">#}
+{#                        </div>#}
+{#                        <div class="form-group mt-4 mb-4">#}
+{#                            <div class="custom-control custom-checkbox">#}
+{#                                <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me" data-parsley-multiple="remember-me">#}
+{#                                <label class="custom-control-label" for="remember-me">Remember me?</label>#}
+{#                            </div>#}
+{#                        </div>#}
+                        <div class="form-group pt-1">
+                            <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
                         </div>
-                    </div>
+                        <div class="form-group mt-4 mb-4">
+                            <div class="custom-control custom-checkbox">
+                                <a href="{% url "login" %}">Already have an account? Click here</a>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 <!-- partial -->
 
