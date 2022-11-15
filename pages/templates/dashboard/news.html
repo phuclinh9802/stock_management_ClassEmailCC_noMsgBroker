@@ -2,34 +2,29 @@
 <html lang="en">
 {% extends 'dashboard/index.html' %}
 {% block content %}
-            <div id="charts">
-            <h1>User's Stock Top Selected News</h1>
+    <div id="charts">
+        <h1>User's Stock Top Selected News</h1>
         <table>
             <thead>
             {% for elem in news_list %}
-            <tr>
-                {% if elem.user_id_id == user.id %}
-                <td> </td>
-                    {% for key, value in resp1.items %}
-                        {% if key == elem.stock_id_id %}
-                            <tr>Stock:{{ key }}</tr>
-                            {% for list in value %}
+                <tr>
+                    {% if elem.user_id_id == user.id %}
+                        <td></td>
+                        {% for key, value in resp1.items %}
+                            {% if key == elem.stock_id_id %}
+                                <tr>Stock:{{ key }}</tr>
+                                {% for list in value %}
 
-                        <td>{{ list }}</td>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </tr>
+                                    <td>{{ list }}</td>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </tr>
             {% endfor %}
             </thead>
         </table>
-
-
-        </div>
-
-
-
-
+        <p><a href="{% url 'sendmail' %}">Send News to your Mail</a></p>
+    </div>
 {% endblock %}
 </html>
