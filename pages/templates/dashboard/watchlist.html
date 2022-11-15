@@ -3,28 +3,72 @@
 {% extends 'dashboard/index.html' %}
 
 {% block content %}
+{##}
+{#        <div id="charts">#}
+{#            <h1>User's Stock Watch list</h1>#}
+{#        <table>#}
+{#            <thead>#}
+{#            {% for elem in watch_list %}#}
+{#            <tr>#}
+{#                {% if elem.user_id_id == user.id %}#}
+{#                <td> </td>#}
+{#                    {% for key, value in resp.items %}#}
+{#                        {% if elem.stock_id == key %}#}
+{#                    <td>Stock ID:  {{ key }} Price:  {{ value }}</td>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#            {% endfor %}#}
+{#            </thead>#}
+{#        </table>#}
+{##}
+{##}
+{#        </div>#}
+                {% for elem in watch_list %}
+                    {% if elem.user_id_id == user.id %}
+                        {% for key, value in resp.items %}
+                            {% if elem.stock_id == key %}
+                <section class="card-section">
+                <div class="card">
+                    <div class="flip-card">
+                        <div class="flip-card__container">
+                            <div class="card-front">
+                                <div class="card-front__tp card-front__tp--camping">
+                                               <h2 class="card-front__heading">
+                                                   {{ key }}
+                                               </h2>
+                                </div>
+                                <div class="card-front__bt">
+                                    <p class="card-front__text-view card-front__text-view--camping">
+                                       {{ value }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="inside-page">
+                        <div class="inside-page__container">
+                            <h3 class="inside-page__heading inside-page__heading--camping">
+                                {{ key }}
+                            </h3>
+                            <p class="inside-page__text">
+                               {{ value }}
+                            </p>
 
-        <div id="charts">
-            <h1>User's Stock Watch list</h1>
-        <table>
-            <thead>
-            {% for elem in watch_list %}
-            <tr>
-                {% if elem.user_id_id == user.id %}
-                <td> </td>
-                    {% for key, value in resp.items %}
-                        {% if elem.stock_id == key %}
-                    <td>Stock ID:  {{ key }} Price:  {{ value }}</td>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </tr>
-            {% endfor %}
-            </thead>
-        </table>
-
-
-        </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
 
 {% endblock %}
+
 </html>
+
+
+
