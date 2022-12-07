@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import WatchList, StockNew
 
 
 # Create your forms here.
@@ -24,3 +25,27 @@ class NewUserForm(UserCreationForm):
 		if commit:
 			user.save()
 		return user
+
+
+class WatchlistForm(forms.ModelForm):
+
+   class Meta:
+       model = WatchList
+       fields = ('stock_id',)
+
+class WatchlistDeleteForm(forms.ModelForm):
+   class Meta:
+       model = WatchList
+       fields = ('stock_id', )
+
+class NewsForm(forms.ModelForm):
+
+   class Meta:
+       model = StockNew
+       fields = ('stock_id', )
+
+class NewsDeleteForm(forms.ModelForm):
+   class Meta:
+       model = StockNew
+       fields = ('stock_id', )
+

@@ -1,7 +1,10 @@
 import json
 import requests
 import os
-from .forms import NewUserForm
+
+from django.core.mail import send_mail
+
+from .forms import NewUserForm, WatchlistForm, WatchlistDeleteForm, NewsForm, NewsDeleteForm
 from django.contrib import messages
 from django.contrib.auth import login
 from django.db.models import Q
@@ -9,11 +12,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from datetime import datetime as dt
 from datetime import timedelta
+from django.utils import timezone
+
 
 from pages.models import Stock, WatchList, StockNew, Profile
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
+
 
 
 # REAL_TIME_DATA_API_KEY = os.environ.get('API_K_RTD')
@@ -85,8 +91,7 @@ def market(request):
 def dashboard(request):
     tickers = Stock.objects.all()
 
-
-    return render(request, 'dashboard/charts.html', {"stocks":tickers})
+    return render(request, 'dashboard/charts.html', {"stocks": tickers})
 
 def register(request):
     if request.method == "POST":
@@ -110,8 +115,9 @@ def register(request):
     return render(request, 'registration/register.html', context={"register_form": form})
 
 
-def watchlist(request):
-    watch_list = WatchList.objects.all()
+def watchlist(request, pk):
+    print(pk)
+    watch_list = WatchList.objects.filter(user_id=pk)
     print(watch_list.values_list())
     resp = {}
     response_stock = 'Default value'
@@ -138,11 +144,88 @@ def watchlist(request):
         # print(response_stock.json()['Time Series (60min)'][yt_date]['4. close'])
 
 
-    return render(request, 'dashboard/watchlist.html', {"watch_list": watch_list, "resp": resp})
+    return render(request, 'dashboard/watchlist.html', {"resp": resp})
 
+def watchlist_new(request, pk):
+    if request.method == "POST":
 
-def news(request):
-    news_list = StockNew.objects.all()
+        form = WatchlistForm(request.POST)
+        if form.is_valid():
+            new_ticker = form.save(commit=False)
+            for users in Profile.objects.filter(user_id=pk):
+                new_ticker.user_id = users.user_id
+            try:
+                print(f"new_ticker: {new_ticker.stock_id}")
+                my_obj = WatchList.objects.get(stock_id=new_ticker.stock_id, user_id=new_ticker.user_id)
+            except:
+                new_ticker.save()
+            watch_list = WatchList.objects.filter(user_id=pk)
+            print(watch_list.values_list())
+            resp = {}
+            response_stock = 'Default value'
+            for elem in watch_list:
+                print(elem.stock_id)
+                stock_parm = {
+                    'function': 'TIME_SERIES_INTRADAY',
+                    'symbol': elem.stock_id,
+                    'interval': '60min',
+                    'apikey': '2APHUBAY3C5SAEY9'
+                }
+                try:
+                    response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+                    response_stock.raise_for_status()
+                    yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+                    resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+                except:
+                    resp['error'] = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
+        return render(request, 'dashboard/watchlist.html', {"resp": resp})
+    else:
+        form = WatchlistForm()
+
+    return render(request, 'dashboard/watchlist_new.html', {'form': form})
+
+def watchlist_delete(request, pk):
+    if request.method == "POST":
+        form = WatchlistDeleteForm(request.POST)
+        if form.is_valid():
+            ticker_name = form.save(commit=False)
+            for users in Profile.objects.filter(user_id=pk):
+                ticker_name.user_id = users.user_id
+            print(f"ticker_name: {ticker_name.stock_id}")
+            try:
+                my_obj = WatchList.objects.get(stock_id=ticker_name.stock_id, user_id=ticker_name.user_id)
+                my_obj.delete()
+            except Exception as ev:
+                print(f"error deleting {ev}")
+            watch_list = WatchList.objects.filter(user_id=pk)
+            print(watch_list.values_list())
+            resp = {}
+            response_stock = 'Default value'
+            for elem in watch_list:
+                print(elem.stock_id)
+                stock_parm = {
+                    'function': 'TIME_SERIES_INTRADAY',
+                    'symbol': elem.stock_id,
+                    'interval': '60min',
+                    'apikey': '2APHUBAY3C5SAEY9'
+                }
+                try:
+                    response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+                    response_stock.raise_for_status()
+                    yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+                    resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+                except:
+                    resp[
+                        'error'] = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
+        return render(request, 'dashboard/watchlist.html', {"resp": resp})
+    else:
+        form = WatchlistDeleteForm()
+
+    return render(request, 'dashboard/watchlist_delete.html', {'form': form})
+def news(request, pk):
+    news_list = StockNew.objects.filter(user_id=pk)
     resp1 = {}
     response_news = "API call limit exhausted"
     for elem in news_list:
@@ -171,4 +254,144 @@ def news(request):
 
         print(f"resp1: {resp1}")
 
-    return render(request, 'dashboard/news.html', {"news_list": news_list, "resp1": resp1})
+    return render(request, 'dashboard/news.html', {"resp1": resp1})
+
+def sendmail(request, pk):
+    # news_list = StockNew.objects.filter(user_id=pk)
+    resp1 = {}
+    response_news = "API call limit exhausted"
+    # for elem in news_list:
+    company_name = Stock.objects.filter(stock_ticker__contains=pk).values_list()[0][0]
+
+    new_parm = {
+            'q': company_name,
+            'apikey': '38e071deaa854b62b36b3faf67fc038f'
+    }
+    try:
+        response_news = requests.get("https://newsapi.org/v2/everything", params=new_parm)
+        response_news.raise_for_status()
+        response_news.json()
+        news_title = [response_news.json()['articles'][i]['title'] for i in range(3)]
+        news_description = [response_news.json()['articles'][i]['url'] for i in range(3)]
+        message_out = []
+        for x, y in zip(news_title, news_description):
+            message_out.append(f"Headline: {x}  Link to news: {y} ")
+            send_mail(
+                f'{x}',
+                f'{y}',
+                'akthrowawaymail@gmail.com',
+                ['akthrowawaymail@gmail.com'],
+                fail_silently=False
+            )
+        print(f"message_out : {message_out}")
+        # resp1[elem.stock_id_id] = message_out
+
+
+    except:
+
+        resp1['error'] = response_news
+
+
+    print("hitting")
+    return render(request, 'dashboard/mailsent.html')
+
+def news_new(request, pk):
+    if request.method == "POST":
+
+        form = NewsForm(request.POST)
+        if form.is_valid():
+
+            form.instance.user = pk
+            new_ticker = form.save(commit=False)
+
+            for users in Profile.objects.filter(user_id=pk):
+                new_ticker.user_id = users.user_id
+            try:
+                print(f"new_ticker: {new_ticker.stock_id}")
+                my_obj = StockNew.objects.get(stock_id=new_ticker.stock_id, user_id=new_ticker.user_id)
+            except:
+                new_ticker.save()
+
+            news_list = StockNew.objects.filter(user_id=pk)
+            resp1 = {}
+            response_news = "API call limit exhausted"
+            for elem in news_list:
+                company_name = Stock.objects.filter(stock_ticker__contains=elem.stock_id_id).values_list()[0][0]
+
+                new_parm = {
+                    'q': company_name,
+                    'apikey': '38e071deaa854b62b36b3faf67fc038f'
+                }
+                try:
+                    response_news = requests.get("https://newsapi.org/v2/everything", params=new_parm)
+                    response_news.raise_for_status()
+                    response_news.json()
+                    news_title = [response_news.json()['articles'][i]['title'] for i in range(3)]
+                    news_description = [response_news.json()['articles'][i]['url'] for i in range(3)]
+                    message_out = []
+                    for x, y in zip(news_title, news_description):
+                        message_out.append(f"Headline: {x}  Link to news: {y} ")
+                    print(f"message_out : {message_out}")
+                    resp1[elem.stock_id_id] = message_out
+
+
+                except:
+
+                    resp1['error'] = response_news
+
+                print(f"resp1: {resp1}")
+
+        return render(request, 'dashboard/news.html', {"resp1": resp1})
+    else:
+        form = NewsForm()
+
+    return render(request, 'dashboard/news_new.html', {'form': form})
+
+
+def news_delete(request, pk):
+    if request.method == "POST":
+        form = NewsDeleteForm(request.POST)
+        if form.is_valid():
+            ticker_name = form.save(commit=False)
+            for users in Profile.objects.filter(user_id=pk):
+                ticker_name.user_id = users.user_id
+            print(f"ticker_name: {ticker_name.stock_id}")
+            try:
+                my_obj = StockNew.objects.get(stock_id=ticker_name.stock_id, user_id=ticker_name.user_id)
+                my_obj.delete()
+            except Exception as ev:
+                print(f"error deleting {ev}")
+            news_list = StockNew.objects.filter(user_id=pk)
+            resp1 = {}
+            response_news = "API call limit exhausted"
+            for elem in news_list:
+                company_name = Stock.objects.filter(stock_ticker__contains=elem.stock_id_id).values_list()[0][0]
+
+                new_parm = {
+                    'q': company_name,
+                    'apikey': '38e071deaa854b62b36b3faf67fc038f'
+                }
+                try:
+                    response_news = requests.get("https://newsapi.org/v2/everything", params=new_parm)
+                    response_news.raise_for_status()
+                    response_news.json()
+                    news_title = [response_news.json()['articles'][i]['title'] for i in range(3)]
+                    news_description = [response_news.json()['articles'][i]['url'] for i in range(3)]
+                    message_out = []
+                    for x, y in zip(news_title, news_description):
+                        message_out.append(f"Headline: {x}  Link to news: {y} ")
+                    print(f"message_out : {message_out}")
+                    resp1[elem.stock_id_id] = message_out
+
+
+                except:
+
+                    resp1['error'] = response_news
+
+                print(f"resp1: {resp1}")
+
+        return render(request, 'dashboard/news.html', {"resp1": resp1})
+    else:
+        form = NewsDeleteForm()
+
+    return render(request, 'dashboard/news_delete.html', {'form': form})
