@@ -1,5 +1,20 @@
 {% extends 'dashboard/index.html' %}
 
 {% block content %}
-<h1>charts</h1>
+    <div class="form-outline">
+                <input id="q" name="q" list="data" placeholder="AAPL..." class="form-control" />
+
+{#                  <select name="stock-data" class="form-ct" id="data">#}
+{#                      <option disabled="true">-- Select Stock Ticker --</option>#}
+{#                      {% for stock in stocks %}#}
+{#                      <option value="{{ stock.stock_ticker }}">{{ stock.stock_ticker }}</option>#}
+{#                      {% endfor %}#}
+{#                  </select>#}
+              <button class="btn btn-primary" id="link" onclick="displayChart(document.getElementById('q').value)">
+                <i class="fas fa-search"></i>
+              </button>
+            <button class="btn btn-danger" id="link" onclick="removePlot()">
+                Clear
+              </button>
+              </div>
 {% endblock %}

@@ -10,7 +10,14 @@
 
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+        </script>
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+        </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
     <link href="https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
     <link href="https://cdn.anychart.com/releases/8.11.0/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
     <link
@@ -110,11 +117,13 @@
         </div>
         <div class="main-container">
         <div class="nav">
+            <div class="nav-list">
+
             <h1 class="brand">SMI</h1>
             <div class="welcome">
 
             {% if user.is_authenticated %}
-                <p>Hi <a href="{% url 'userupdate' pk=user.pk %}">{{ user.username }}!</a></p>
+                <p class="welcome-content">Hi <a href="{% url 'userupdate' pk=user.pk %}">{{ user.username }}!</a></p>
                 <p>
                     <a href="{% url 'logout' %}">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -122,25 +131,14 @@
                 </p>
             {% endif %}
             </div>
+            </div>
+
 
         </div>
 
 {#            <form class="input-group" method="get">#}
-              <div class="form-outline">
-                <input id="q" name="q" list="data" placeholder="AAPL..." class="form-control" />
-{#                  <select name="stock-data" class="form-ct" id="data">#}
-{#                      <option disabled="true">-- Select Stock Ticker --</option>#}
-{#                      {% for stock in stocks %}#}
-{#                      <option value="{{ stock.stock_ticker }}">{{ stock.stock_ticker }}</option>#}
-{#                      {% endfor %}#}
-{#                  </select>#}
-              </div>
-              <button class="btn btn-primary" id="link" onclick="displayChart(document.getElementById('q').value)">
-                <i class="fas fa-search"></i>
-              </button>
-            <button class="btn btn-danger" id="link" onclick="removePlot()">
-                Clear
-              </button>
+
+
 
                 <div id="charts">
 
@@ -151,9 +149,22 @@
 
         </div>
     </div>
+
 </body>
 </html>
-
+<script>
+  $( function() {
+    var availableTags = [
+        {% for ticker in stocks %}
+            "{{ticker.stock_ticker}}",
+        {% endfor %}
+    ];
+    console.log(availableTags)
+    $( "#q" ).autocomplete({
+      source: availableTags
+    });
+  } );
+</script>
 <script>
     function removePlot() {
         chart.dispose();
@@ -197,7 +208,7 @@
                     // set chart selected date/time range
                     chart.selectRange('2020-11-27', '2021-11-26');
 
-                    chart.background().fill("#111");
+                    chart.background().fill("#0A0F1D");
 
 
                     // create range picker
@@ -230,7 +241,8 @@
     .contain {
         height: 100vh;
         width: 100vw;
-        background-color: #00003F;
+        background-color: #0A0F1D;
+        overflow:scroll;
 
 }
 
@@ -293,20 +305,17 @@ select {
         height: 100%;
         margin: 0;
         padding-left: 70px;
-        border-top: 1px solid #ddd;
 }
 
-.input-group datalist {
-        position: absolute;
-        background-color: white;
-        border: 1px solid blue;
-        border-radius: 0 0 5px 5px;
-        border-top: none;
-        font-family: sans-serif;
-        width: 350px;
-        padding: 5px;
-        max-height: 10rem;
-        overflow-y: auto
+input#q {
+    padding: 10px;
+    font-size: 1.25em;
+}
+
+.form-outline {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 50px;
 }
 
 .input-group option {
@@ -328,11 +337,9 @@ option:hover, .active{
 }
 
 .nav {
-    margin: 0 30px;
     color: #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center
+    background: #252F4B;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
 }
 
@@ -344,7 +351,21 @@ option:hover, .active{
 .nav .welcome {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 30px;
+}
+
+
+.welcome p.welcome-content {
+    font-size: 1.25em;
+}
+
+.nav-list {
+    width: 100%;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
 
