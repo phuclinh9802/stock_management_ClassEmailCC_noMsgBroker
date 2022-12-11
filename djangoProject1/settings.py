@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-azp7a1t580oey53%x*6%2uykd&t-d541bg+szl!d+_hse+suoq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
 
@@ -127,6 +127,12 @@ LOGOUT_REDIRECT_URL = '/accounts/login'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'akthrowawaymail@gmail.com'
-EMAIL_HOST_PASSWORD = 'bkcprqepmflavbpv'
+# <<<<<<< HEAD
+# EMAIL_HOST_PASSWORD = 'bkcprqepmflavbpv'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# =======
+EMAIL_HOST_PASSWORD = 'ruqxhyccrzrezohp'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+# >>>>>>> 27b1f7748fe62c8dfa942cd40c72a713328e3690
