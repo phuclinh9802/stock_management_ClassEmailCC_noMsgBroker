@@ -1,30 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-{% extends 'dashboard/index.html' %}
+{#{% extends 'dashboard/index.html' %}#}
 {% block content %}
-    <div id="charts">
-        <h1>User's Stock Top Selected News</h1>
-        <table>
-            <thead>
-            {% for elem in news_list %}
-                <tr>
-                    {% if elem.user_id_id == user.id %}
-                        <td></td>
-                        {% for key, value in resp1.items %}
-                            {% if key == elem.stock_id_id %}
-                                <tr>Stock:{{ key }}</tr>
-                                {% for list in value %}
-
-                                    <td>{{ list }}</td>
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                </tr>
+{#<<<<<<< HEAD#}
+{#    <div id="charts">#}
+{#        <h1>User's Stock Top Selected News</h1>#}
+{#        <table>#}
+{#            <thead>#}
+{#            {% for elem in news_list %}#}
+{#                <tr>#}
+{#                    {% if elem.user_id_id == user.id %}#}
+{#                        <td></td>#}
+{#                        {% for key, value in resp1.items %}#}
+{#                            {% if key == elem.stock_id_id %}#}
+{#                                <tr>Stock:{{ key }}</tr>#}
+{#                                {% for list in value %}#}
+{##}
+{#                                    <td>{{ list }}</td>#}
+{#                                {% endfor %}#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    {% endif %}#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#            </thead>#}
+{#        </table>#}
+{#        <p><a href="{% url 'sendmail' %}">Send News to your Mail</a></p>#}
+{#    </div>#}
+{#{% endblock %}#}
+{#</html>#}
+{#=======#}
+<a href="{% url 'dashboard' %}">Back</a>
+<table class="container_news">
+	<thead>
+		<tr>
+			<th><h2></h2></th>
+		</tr>
+	</thead>
+	<tbody>
+    {% for key, value in resp1.items %}
+		<tr>
+			<td style="color: #FB667A;">{{ key }}</td>
+        </tr>
+        {% for list in value %}
+            <td>{{ list }}</td>>
             {% endfor %}
-            </thead>
-        </table>
-        <p><a href="{% url 'sendmail' %}">Send News to your Mail</a></p>
-    </div>
+
+        <tr>
+			<td><a href="{% url 'sendmail' pk=key%}">Send Email</a></td>
+		</tr>
+    {% endfor %}
+    <tr>
+        <td><a href="{% url 'news_new' pk=user.id%}">Add Stock Ticker</a></td>
+        <td><a href="{% url 'news_delete' pk=user.id%}">Delete Stock Ticker</a></td>
+    </tr>
+	</tbody>
+</table>
 {% endblock %}
 </html>
+<style lang="scss">
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.42em;
+  color:#A7A1AE;
+  background-color:#1F2739;
+}
+
+h1 {
+  font-size:5em;
+  font-weight: 300;
+  line-height:1em;
+  text-align: center;
+  color: #4DC3FA;
+}
+
+h2 {
+  font-size:1em;
+  font-weight: 300;
+  text-align: center;
+  display: block;
+  line-height:1em;
+  padding-bottom: 2em;
+  color: #FB667A;
+}
+
+h2 a {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #FB667A;
+  text-decoration: none;
+}
+
+a{
+    color: #111111;
+    font-size: 2em;
+}
+
+.blue { color: #185875; }
+.yellow { color: #FFF842; }
+
+.container_news th h1 {
+	  font-weight: bold;
+	  font-size: 1em;
+  text-align: left;
+  color: #185875;
+}
+
+.container_news td {
+	  font-weight: normal;
+	  font-size: 1em;
+  -webkit-box-shadow: 0 2px 2px -2px #0E1119;
+	   -moz-box-shadow: 0 2px 2px -2px #0E1119;
+	        box-shadow: 0 2px 2px -2px #0E1119;
+}
+
+.container_news {
+	  text-align: left;
+	  overflow: hidden;
+	  width: 100%;
+    height: 100%;
+	  margin: 0 auto;
+  display: table;
+  padding: 0 0 8em 0;
+}
+
+.container_news td, .container_news th {
+	  padding-bottom: 2%;
+	  padding-top: 2%;
+  padding-left:2%;
+    padding-right: 2px;
+}
+
+/* Background-color of the odd rows */
+.container_news tr:nth-child(odd) {
+	  background-color: #323C50;
+}
+
+/* Background-color of the even rows */
+.container_news tr:nth-child(even) {
+	  background-color: #2C3446;
+}
+
+.container_news th {
+	  background-color: #1F2739;
+}
+
+{#.container_news td:first-child {  }#}
+
+.container_news tr:hover {
+   background-color: #464A52;
+-webkit-box-shadow: 0 6px 6px -6px #0E1119;
+	   -moz-box-shadow: 0 6px 6px -6px #0E1119;
+	        box-shadow: 0 6px 6px -6px #0E1119;
+}
+
+.container_news td:hover {
+  background-color: #FFF842;
+  color: #403E10;
+  font-weight: bold;
+
+  box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
+  transform: translate3d(6px, -6px, 0);
+
+    transition-delay: 0s;
+    transition-duration: 0.4s;
+    transition-property: all;
+    transition-timing-function: line;
+}
+
+@media (max-width: 800px) {
+.container_news td:nth-child(4),
+.container_news th:nth-child(4) { display: none; }
+}
+</style>
+{#>>>>>>> 27b1f7748fe62c8dfa942cd40c72a713328e3690#}
