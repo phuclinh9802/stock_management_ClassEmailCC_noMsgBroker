@@ -122,11 +122,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/dashboard'
+
 LOGOUT_REDIRECT_URL = '/accounts/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'akthrowawaymail@gmail.com'
+
+# <<<<<<< HEAD
+# EMAIL_HOST_PASSWORD = 'bkcprqepmflavbpv'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# =======
 EMAIL_HOST_PASSWORD = 'ruqxhyccrzrezohp'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+# >>>>>>> 27b1f7748fe62c8dfa942cd40c72a713328e3690

@@ -3,23 +3,74 @@
 {% extends 'dashboard/index.html' %}
 
 {% block content %}
+<section class="card-section">
+                <table>
+                    <tr>
+                        {% for key, value in resp.items %}
+                        <td>
+                <div class="card">
+                    <div class="flip-card">
+                        <div class="flip-card__container">
+                            <div class="card-front">
+                                <div class="card-front__tp card-front__tp--camping">
+                                               <h2 class="card-front__heading">
+                                                   {{ key }}
+                                               </h2>
+                                </div>
+                                <div class="card-front__bt">
+                                    <p class="card-front__text-view card-front__text-view--camping">
+                                       {{ value }}
+                                    </p>
+                                </div>
 
-        <div id="charts">
-        <table>
+                            </div>
+                            <div class="card-back">
+                                <h1 class="pic__container" >
+                                    {{ key }}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="inside-page">
+                        <div class="inside-page__container">
+                            <h3 class="inside-page__heading inside-page__heading--camping">
+                                Stock Ticker: {{ key }}
+                            </h3>
+                            <p class="inside-page__text">
+                               Price: {{ value }}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </section>
+    <div>
+        <table class="table table-striped table-bordered table-hover w-auto" style="    margin-left: 199px;
+    margin-top: 10px;">
             <thead>
-            {% for elem in watch_list %}
-            <tr>
-                {% if elem.user_id_id == user.id %}
-                <td>{{ elem.stock_id }}</td>
-                    <td>{{ resp }}</td>
-                {% endif %}
-            </tr>
-            {% endfor %}
+                <tr class="bg-info">
+                    <th colspan="3">Actions</th>
+                </tr>
             </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="{% url 'watchlist_new' pk=user.id%}"><span
+                class="btn btn-primary">Add Stock Ticker</span></a>
+                    </td>
+                     <td>
+                        <a href="{% url 'watchlist_delete' pk=user.id%}"
+                           class="btn btn-danger">Delete</a>
+                        </td>
+                </tr>
+            </tbody>
         </table>
 
-
-        </div>
-
+    </div>
 {% endblock %}
+
 </html>
