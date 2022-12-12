@@ -86,9 +86,18 @@ def register(request):
     if request.method == "POST":
         print("entering POST")
         form = NewUserForm(request.POST)
+        form2 = ProfileForm(request.POST)
         if form.is_valid():
             print("form is valid")
             user = form.save()
+            profile = Profile()
+            profile.profile_pic = 'profile_images/b2.jpeg'
+            profile.user_id = user
+            profile.user_city = ".."
+            profile.user_state = ".."
+            profile.user_street = ".."
+            profile.user_zipcode = "12345"
+            profile.save()
             user.save()
             messages.success(request, "Registration successful.")
             return redirect("dashboard")
