@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import WatchList, StockNew
+from .models import WatchList, StockNew, Threshold
 
 
 # Create your forms here.
@@ -49,3 +49,13 @@ class NewsDeleteForm(forms.ModelForm):
        model = StockNew
        fields = ('stock_id', )
 
+class ThresholdForm(forms.ModelForm):
+
+   class Meta:
+       model = Threshold
+       fields = ('stock_id', 'threshold_percentage_change')
+
+class ThresholdDeleteForm(forms.ModelForm):
+   class Meta:
+       model = Threshold
+       fields = ('stock_id', )
