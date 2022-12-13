@@ -100,7 +100,7 @@ def register(request):
             profile.save()
             user.save()
             messages.success(request, "Registration successful.")
-            return redirect("dashboard")
+            return redirect("login")
 
         else:
             print(form.errors)
