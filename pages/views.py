@@ -270,8 +270,8 @@ def sendmail(request, pk):
             send_mail(
                 f'{x}',
                 f'{y}',
-                'akthrowawaymail@gmail.com',
-                ['akthrowawaymail@gmail.com'],
+                'phuclinh9802@gmail.com',
+                ['phuclinh9802@gmail.com'],
                 fail_silently=False
             )
         print(f"message_out : {message_out}")
