@@ -5,18 +5,14 @@ import os
 from django.core.mail import send_mail
 
 from .forms import NewUserForm, EditProfileForm, ProfileForm
-from .forms import NewUserForm, WatchlistForm, WatchlistDeleteForm, NewsForm, NewsDeleteForm
+from .forms import NewUserForm, WatchlistForm, WatchlistDeleteForm, NewsForm, NewsDeleteForm, ThresholdForm, ThresholdDeleteForm
 from django.contrib import messages
-from django.contrib.auth import login
-from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from datetime import datetime as dt
-from datetime import timedelta
-from django.utils import timezone
 
 
-from pages.models import Stock, WatchList, StockNew, Profile
+
+from pages.models import Stock, WatchList, StockNew, Profile, Threshold
 
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
@@ -32,7 +28,7 @@ REAL_TIME_DATA = "https://financialmodelingprep.com/api/v3/quote-short/TSLA?apik
 STOCK_ENDPOINT_GAINERS = f"https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=2d4d605c25190468fc00fe2aca6a2276"
 STOCK_ENDPOINT_LOSERS = f"https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=2d4d605c25190468fc00fe2aca6a2276"
 STOCK_ENDPOINT_ACTIVE = f"https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=2d4d605c25190468fc00fe2aca6a2276"
-
+PRICE_CHANGE = f"https://financialmodelingprep.com/api/v3/stock-price-change/AAPL?apikey=2d4d605c25190468fc00fe2aca6a2276"
 
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
 
@@ -393,3 +389,113 @@ def userupdate(request, pk):
     else:
         form = ProfileForm(instance=profile)
     return render(request, 'dashboard/userupdate.html', {'form': form})
+
+def threshold(request, pk):
+    print(pk)
+    watch_list = Threshold.objects.filter(user_id=pk)
+    print(watch_list.values_list())
+    resp = {}
+    response_stock = 'Default value'
+    for elem in watch_list:
+        print(elem.stock_id)
+        stock_parm = {
+            'function': 'TIME_SERIES_INTRADAY',
+            'symbol': elem.stock_id,
+            'interval': '60min',
+            'apikey': '2APHUBAY3C5SAEY9'
+            }
+        try:
+            response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+            response_stock.raise_for_status()
+            yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+            resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+        except:
+            resp['error']  = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
+
+
+        print(response_stock.json())
+
+        # print(response_stock.json()['Time Series (60min)'][yt_date]['4. close'])
+
+
+    return render(request, 'dashboard/threshold.html', {"resp": resp, "watch_list": watch_list})
+
+def threshold_new(request, pk):
+    if request.method == "POST":
+
+        form = ThresholdForm(request.POST)
+        if form.is_valid():
+            new_ticker = form.save(commit=False)
+            for users in Profile.objects.filter(user_id=pk):
+                new_ticker.user_id = users.user_id
+            try:
+                print(f"new_ticker: {new_ticker.stock_id}")
+                my_obj = Threshold.objects.get(stock_id=new_ticker.stock_id, user_id=new_ticker.user_id)
+            except:
+                new_ticker.save()
+            watch_list = Threshold.objects.filter(user_id=pk)
+            print(watch_list.values_list())
+            resp = {}
+            response_stock = 'Default value'
+            for elem in watch_list:
+                print(elem.stock_id)
+                stock_parm = {
+                    'function': 'TIME_SERIES_INTRADAY',
+                    'symbol': elem.stock_id,
+                    'interval': '60min',
+                    'apikey': '2APHUBAY3C5SAEY9'
+                }
+                try:
+                    response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+                    response_stock.raise_for_status()
+                    yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+                    resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+                except:
+                    resp['error'] = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
+        return render(request, 'dashboard/threshold.html', {"resp": resp, "watch_list": watch_list})
+    else:
+        form = ThresholdForm()
+
+    return render(request, 'dashboard/threshold_new.html', {'form': form})
+
+def threshold_delete(request, pk):
+    if request.method == "POST":
+        form = ThresholdDeleteForm(request.POST)
+        if form.is_valid():
+            ticker_name = form.save(commit=False)
+            for users in Profile.objects.filter(user_id=pk):
+                ticker_name.user_id = users.user_id
+            print(f"ticker_name: {ticker_name.stock_id}")
+            try:
+                my_obj = Threshold.objects.get(stock_id=ticker_name.stock_id, user_id=ticker_name.user_id)
+                my_obj.delete()
+            except Exception as ev:
+                print(f"error deleting {ev}")
+            watch_list = Threshold.objects.filter(user_id=pk)
+            print(watch_list.values_list())
+            resp = {}
+            response_stock = 'Default value'
+            for elem in watch_list:
+                print(elem.stock_id)
+                stock_parm = {
+                    'function': 'TIME_SERIES_INTRADAY',
+                    'symbol': elem.stock_id,
+                    'interval': '60min',
+                    'apikey': '2APHUBAY3C5SAEY9'
+                }
+                try:
+                    response_stock = requests.get("https://www.alphavantage.co/query", params=stock_parm)
+                    response_stock.raise_for_status()
+                    yt_date = response_stock.json()['Meta Data']['3. Last Refreshed']
+                    resp[elem.stock_id] = response_stock.json()['Time Series (60min)'][yt_date]['4. close']
+                except:
+                    resp[
+                        'error'] = "{'Note': 'Thank you for using Alpha Vantage! Our standard API call frequency is 5 calls per minute and 500 calls per day. Please visit https://www.alphavantage.co/premium/ if you would like to target a higher API call frequency.'}"
+
+        return render(request, 'dashboard/threshold.html', {"resp": resp, "watch_list": watch_list})
+    else:
+        form = ThresholdDeleteForm()
+
+    return render(request, 'dashboard/threshold_delete.html', {'form': form})
