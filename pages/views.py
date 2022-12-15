@@ -508,3 +508,6 @@ def threshold_delete(request, pk):
         form = ThresholdDeleteForm()
 
     return render(request, 'dashboard/threshold_delete.html', {'form': form})
+
+def documentation(request):
+    return render(request, 'dashboard/documentation.html')

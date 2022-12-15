@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.landing, name='landing'),
     path('market/', views.market, name='market'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/documentation/', views.documentation, name='documentation'),
     path('watchlist/<str:pk>/list', views.watchlist, name='watchlist'),
     path('watchlist/<str:pk>/create/', views.watchlist_new, name='watchlist_new'),
     path('watchlist/<str:pk>/delete/', views.watchlist_delete, name='watchlist_delete'),
